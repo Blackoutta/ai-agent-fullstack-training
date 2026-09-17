@@ -1,0 +1,19 @@
+{
+  "name": "login-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TypeScript demo project for showing how a codebase agent finds the login flow.",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
