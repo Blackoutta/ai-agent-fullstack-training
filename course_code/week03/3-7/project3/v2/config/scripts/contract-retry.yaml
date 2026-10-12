@@ -1,0 +1,31 @@
+# 离线决策脚本：契约回喂演示。
+# 前两步故意发出"合法但不中用"的参数——schema 全过、沙箱也放行，只是这次调用注定办不成事；
+# 后两步按错误文案改对。跑这条脚本要看的不是工具能不能用，而是被拒之后模型拿到的那句话
+# 有没有足够信息让它下一步改对。
+steps:
+  - text: "先把仓库里的 TypeScript 文件清点一遍。"
+    tool_calls:
+      - name: list_files
+        args:
+          pattern: /**/*.ts
+
+  - text: "顺手看看有没有会话相关的代码。"
+    tool_calls:
+      - name: search_code
+        args:
+          pattern: (session
+
+  - text: "两条都指了同一个方向：glob 与 pattern 比对的是工作区内的相对路径，我写成了绝对形式；括号还没配对。按错误里给的写法改。"
+    tool_calls:
+      - name: list_files
+        args:
+          pattern: "**/*.ts"
+          path: src
+
+  - text: "清单拿到了，登录路由在里面，读它。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/routes/login.ts
+
+  - text: "两次被契约层拦下，两次都在触达文件系统之前，改对之后一次读到 13 行代码。契约的价值就在这里：它不让模型少干活，只让模型别把力气花在注定无效的调用上。"

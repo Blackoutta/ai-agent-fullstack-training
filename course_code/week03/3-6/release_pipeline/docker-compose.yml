@@ -1,0 +1,42 @@
+services:
+  pipeline:
+    build: .
+    container_name: release-pipeline
+    env_file:
+      - .env
+    environment:
+      CHECKPOINT_DB: /app/data/checkpoints.sqlite
+      REPORTS_DIR: /app/reports
+      TOOLS_CONFIG: /app/config/tools.yaml
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+      - ./config:/app/config:ro
+    command: ["python", "-m", "app", "--help"]
+    stdin_open: true
+    tty: true
+
+  # 可选：LangGraph dev server（Mode C，纯 HTTP API，无 Studio UI）
+  # 启用步骤：
+  #   1) 取消下面整段注释
+  #   2) docker compose up dev-server
+  #   3) 浏览器打开 http://localhost:8123/docs 看 OpenAPI
+  #   4) curl 调用见 README §10
+  # dev-server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: release-pipeline-dev
+  #   command: ["langgraph", "dev", "--host", "0.0.0.0", "--port", "8123", "--no-browser"]
+  #   ports:
+  #     - "8123:8123"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
+  #     - ./data:/app/data
+  #   working_dir: /app
+
+volumes:
+  data:
+  reports:

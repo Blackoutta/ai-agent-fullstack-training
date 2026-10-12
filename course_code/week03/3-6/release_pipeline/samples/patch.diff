@@ -1,0 +1,8 @@
+diff --git a/src/auth/session.ts b/src/auth/session.ts
+index 1234567..89abcde 100644
+--- a/src/auth/session.ts
++++ b/src/auth/session.ts
+@@ -42,7 +42,7 @@ export function isSessionValid(session: Session, now: Date): boolean {
+-  return now.toDateString() < session.expiresAt.toDateString();
++  return now.getTime() < session.expiresAt.getTime();
+ }

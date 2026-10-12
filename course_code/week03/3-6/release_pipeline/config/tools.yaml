@@ -1,0 +1,37 @@
+# 工具配置：每个工具可独立切换 real / mock 模式
+# 在 mock 模式下，可通过 mock_faults 注入故障，用于演示循环与回滚分支
+
+defaults:
+  mode: mock                # real | mock
+  latency_ms: 200           # mock 模式下的模拟耗时
+
+# 注入故障：工具名 -> 触发条件
+# 例如 simulate_smoke_fail: true 会让 smoke_test 节点首次执行失败，演示 begin_revision 回环
+mock_faults:
+  simulate_smoke_fail: false
+  simulate_canary_unhealthy: false
+  simulate_build_fail: false
+  simulate_security_block: false
+
+tools:
+  build_service:
+    mode: mock
+    real_cmd: ["./scripts/build.sh", "{service}", "{version}"]
+  run_unit_tests:
+    mode: mock
+    real_cmd: ["npm", "--prefix", "{service}", "test"]
+  security_scan:
+    mode: mock
+    real_cmd: ["./scripts/scan.sh", "{diff_path}"]
+  dependency_audit:
+    mode: mock
+    real_cmd: ["npm", "audit", "--prefix", "{service}"]
+  deploy:
+    mode: mock
+    real_cmd: ["kubectl", "apply", "-f", "{manifest}"]
+  query_metrics:
+    mode: mock
+    real_endpoint: "http://prometheus.local/api/v1/query"
+  rollback:
+    mode: mock
+    real_cmd: ["kubectl", "rollout", "undo", "deployment/{service}"]

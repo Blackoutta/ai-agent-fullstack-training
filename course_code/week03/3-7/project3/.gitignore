@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+workdir/
+checkpoints/
+artifacts/
+!v2/artifacts/
+v2/artifacts/*
+!v2/artifacts/eval_report.md
+!v2/artifacts/eval_report.json
+transcripts/
+.eval-runs/
+v2/data/
+.env

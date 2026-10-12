@@ -1,0 +1,124 @@
+gateway:
+  base_url: https://api.deepseek.com
+  api_key_env: DEEPSEEK_API_KEY
+  prompt_name: codebase.agent
+  prompt_version: v1
+
+# local 直接读 config/prompts.yaml，离线跑与 CI 用它；
+# gateway 走阶段一的 Prompt Registry，渲染逻辑两边一致。
+prompt:
+  source: local
+  file: prompts.yaml
+
+# 决策器默认口径是 real（见 src/cli.ts 的 --decider）：直连 DeepSeek 的 OpenAI 兼容端点。
+# id 就是厂商的模型名；provider_id 写成 deepseek 后，pi-ai 会按 DeepSeek 那套 compat 组装请求
+# ——不指定思考档位就下发 thinking: {type: "disabled"}（见 src/pi/provider.ts），即"关闭思考"。
+# 没设 DEEPSEEK_API_KEY 时 real 会按任务条目的离线脚本降级并在开头说破；
+# 既没密钥又没脚本可退时直接 MODEL_UNAVAILABLE，绝不换成 pi 自己的模型。
+model:
+  provider_id: deepseek
+  id: deepseek-v4-flash
+  name: DeepSeek V4.1 Flash
+  context_window: 1000000
+  max_tokens: 4096
+  # 使用峰值价格作为预算上限，单位：美元 / 1M Token。
+  input_per_million: 0.3
+  output_per_million: 1.2
+  cache_read_per_million: 0.006
+
+runtime:
+  database: ../data/platform.db
+  max_turns: 8
+  max_tool_calls: 12
+  max_repeated_call: 2
+  max_total_tokens: 30000
+  max_cost_usd: 0.25
+  max_duration_ms: 120000
+  # 上下文预算（P3）。渲染进模型的对话与写进审计的文本是两笔账，分开配：
+  # keep_recent_turns 是"最近几步逐字保留"，更早的步骤在上下文里只剩一行摘要；
+  # audit_max_* 管的是数据库里那一份，按行截断，绝不从行中间切。
+  # 30 行的取法：样本仓库里最长的实现文件是 37 行，超过它就该只留头部加全文哈希，
+  # 数据库存"发生过什么"，全文留在仓库里。
+  context:
+    keep_recent_turns: 2
+    audit_max_lines: 30
+    audit_max_chars: 4000
+
+# 审批工作流住在哪儿。这一段是"全局默认值"，每一类任务都能在 tasks.yaml 里各盖一层。
+# mode（裁定开关）：disabled=阶段二行为，审批落在本地 approvals 表，CLI 自己就能决定，一次 HTTP 都不发；
+#       http=单号交给 hitl/service.py 那张 LangGraph 图，谁能批、能不能自批全由图判。
+#       命令行加 HITL_MODE=http 就能在两条路之间切，这一层大过 tasks.yaml 里的 via。
+# gate（要不要过人）：auto=由工具自带的确认要求说了算；none=一个都不拦（审计留 APPROVAL_GATE_OFF）；
+#       写成工具名单则在 auto 之上追加：点名的即使自带不需确认也要过人。
+# approvers（谁批算数）：角色名单。发起人和审批人都要落在这份名单里才算资格，
+#       空名单是失败关闭——图在第一道门就把单子弹回（NO_APPROVER_CONFIGURED），绝不悄悄放开。
+hitl:
+  mode: disabled
+  gate: auto
+  base_url: http://127.0.0.1:8383
+  api_key_env: HITL_API_KEY
+  approvers:
+    - maintainer
+  timeout_ms: 5000
+  wait_timeout_ms: 120000
+
+policy:
+  role_permissions:
+    reviewer:
+      - repo:read
+      - git:read
+    developer:
+      - repo:read
+      - repo:write
+      - git:read
+    maintainer:
+      - repo:read
+      - repo:write
+      - repo:execute
+      - git:read
+  agent_tool_allowlist:
+    codebase-agent:
+      - list_files
+      - search_code
+      - read_file
+      - read_directory
+      - write_file
+      - apply_patch
+      - run_test
+      - run_command
+      - git_diff
+      - git_status
+
+sandbox:
+  # 一次只开一个仓库。--dir 会覆盖这里，评估器换样本时不必改配置。
+  root: ../../samples/1_login_demo
+  deny_read:
+    - "**/.env"
+    - "**/.env.*"
+    - "**/*.pem"
+    - "**/*.key"
+  deny_write:
+    - "package.json"
+    - "package-lock.json"
+    - "tsconfig.json"
+    - "**/node_modules/**"
+    - ".git/**"
+  # 允许例外：命中 deny_write 但落在这份名单里的路径放行；默认空，行为与之前一致。
+  # 任务二就是用它把“新增测试”放进 tests/generated/，而已有测试仍在禁写名单里。
+  allow_write: []
+  max_read_chars: 12000
+  max_output_chars: 12000
+  max_capture_bytes: 4194304
+  command_timeout_ms: 20000
+  kill_grace_ms: 2000
+  # 子进程环境里凡是名字以此结尾的一律剔除：模型可以 run_command，但拿不到网关密钥。
+  secret_env_pattern: "(KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)$"
+
+# 任务知识：打开哪个仓库、按什么顺序干、测试命令、预算、交付物、审批口径（门口/裁定/名单）。
+# 从 P1 起这一类知识不在本文件里，本文件只留一个指路键。
+tasks:
+  file: tasks.yaml
+
+# 没有任务可领时（阶段二行为）run_test 用的命令。领了任务就由任务条目的 test_command 覆盖。
+tools:
+  test_command: []

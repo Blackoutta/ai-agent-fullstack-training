@@ -1,0 +1,98 @@
+# 任务知识住在这份文件里：一类任务打开哪个仓库、按什么顺序干、拿什么算交付、
+# 什么不能碰、这一路的审批怎么配，全在这里说清。
+#
+# src/tasks.ts 只是解释器，src/ 下面任何 TypeScript 文件都不出现任务名。
+# 所以"接第三类任务要几天"的答案是：在这份 YAML 里加一个条目、配一份决策脚本，
+# TypeScript 一行都不改。debt_audit 就是这条论据，它是纯配置新增的任务类型。
+#
+# 字段规格（键名锁定，相对路径都相对 config/ 目录解析）：
+#   display_name       给人看的任务名，进提示词与 CLI 输出
+#   match: [关键词]    一句话目标里出现任一关键词就路由到这一类；自上而下第一个命中的赢，
+#                      所以特异词写在前面，"文档""测试"这种宽泛词不要单列
+#   workspace          本类任务打开的仓库目录，覆盖 platform.yaml 的 sandbox.root
+#   script             离线决策脚本（课堂与 CI 用它，不联网）；接真模型时这一项留空即可
+#   brief              写进系统提示词"本次任务"那一段的工作简报
+#   deliverable        交付物路径，与 brief 一起进提示词
+#   test_command       本类任务的测试命令；不声明时 run_test 明确拒绝执行
+#   budget             覆盖 platform.yaml 的 runtime 预算，只写要改的那几项
+#   deny_write_extra   本类任务独有的禁止写入路径，追加到 sandbox.deny_write 之后
+#   approval:          这一类任务的审批口径，三个键都能省略（省略就沿用 platform.yaml 的 hitl 段）
+#     gate               门口开关：auto（工具自带的确认要求说了算）/ none（一个都不拦，审计留 APPROVAL_GATE_OFF）
+#                        / 工具名单（点名的这些即使自带不需确认也要过人）
+#     via                裁定开关：local（本地 approvals 表）/ http（LangGraph 那张图）
+#     approvers          审批名单：哪些角色批的才算数；空名单＝谁批都不算，图在第一道门弹回
+#   gate 与 via 是正交的两维：关掉门口不等于放开审批，换成图也不等于门口开着。
+tasks:
+  understand:
+    display_name: 任务一 · 代码理解（把登录逻辑写成说明文档）
+    match: [登录逻辑, 调用链, 代码理解, 说明文档]
+    workspace: ../../samples/1_login_demo
+    script: scripts/understand-login.yaml
+    deliverable: artifacts/login-flow.md
+    brief: |
+      这一类任务的交付物是一份写给新同事的登录调用链说明，不是代码改动。
+      先定位再阅读，没读过的文件不要描述它的实现；唯一的写操作就是这份文档本身。
+      一个文件只读一次，别把预算花在通读整个仓库上：路由、中间件、Service、仓储、假数据库
+      这条主链读够了，就立刻 write_file 写这份文档；剩下没读到的细节宁可留白，也不要拖到最后。
+      文档里每个结论都要带到文件与行号级别的依据，并且单列"不能照搬到生产"的事实。
+    budget:
+      max_turns: 10
+      max_tool_calls: 100
+    # 任务一只写一份文档：门口按工具自带要求走（写文件要人确认），裁定留在本地表，
+    # 所以离线演示与单测都不依赖那个 HTTP 服务。
+    approval:
+      gate: auto
+      via: local
+      approvers:
+        - maintainer
+
+  fix_tests:
+    display_name: 任务二 · 测试生成与修复（让失败用例变绿）
+    match: [修复, 失败用例, 补充测试, 缺陷]
+    workspace: ../../samples/2_bug_fix/demo-app
+    script: scripts/fix-session-boundary.yaml
+    test_command: ["npm", "test", "--"]
+    deliverable: src/auth/session-policy.ts
+    deny_write_extra:
+      - "tests/**"
+    # 受控例外：禁写名单封住整个 tests/，这里再单开一个目录，只让新增测试落在里面。
+    allow_write_extra:
+      - "tests/generated/**"
+    brief: |
+      这一类任务以 run_test 的退出码为唯一验收标准：先跑一次拿基线，读失败用例与被测源码，
+      补齐缺口后让全部用例变绿，最后 git_diff 说清改了哪几行。
+      新增测试只写到 tests/generated/ 下（沙箱只放开这一个目录）；
+      tests/ 下的已有测试一行都不许改——靠改测试让红用例变绿会被沙箱拒绝。
+      同一个文件只读一次；别把工具调用预算耗在反复通读上，要给“补测试 + 修源码 + 复跑”留出余量。
+    budget:
+      max_turns: 10
+      max_tool_calls: 100
+    # 任务二会改源码，还允许跑仓库里的 npm script：run_test 自带"不需确认"，这里点名把它追加进门口。
+    # 审批由 LangGraph 那张图裁定，名单放宽到 maintainer 或 tech_lead 任一人。
+    # 服务没起来时用 `HITL_MODE=disabled` 前缀退到本地表——命令行那一层永远大过这份文件。
+    approval:
+      gate:
+        - run_test
+      via: http
+      approvers:
+        - maintainer
+        - tech_lead
+
+  debt_audit:
+    display_name: 任务三 · 技术债巡检（纯配置新增的那一类）
+    match: [技术债, 巡检, 遗留标记]
+    workspace: ../../samples/1_login_demo
+    script: scripts/debt-audit.yaml
+    deliverable: docs/tech-debt-audit.md
+    brief: |
+      这一类任务扫描仓库里的技术债标记（TODO、FIXME、Demo-only 一类），
+      汇总成一份 docs/tech-debt-audit.md：命中位置、原文、一句风险判断。
+      一次检索、一份报告、一次 git_status 复查，不改动任何源码。
+    budget:
+      max_turns: 6
+      max_tool_calls: 6
+    # 任务三关掉门口：一次检索、一份新报告，不动任何已有文件，沙箱的 deny_write 红线照旧生效。
+    # 门是关了的，但每次都留一条 APPROVAL_GATE_OFF 的审计——"没人看着"和"没记录"是两件事。
+    approval:
+      gate: none
+      via: local

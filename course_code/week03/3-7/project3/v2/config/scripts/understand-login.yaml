@@ -1,0 +1,76 @@
+# 离线决策脚本：任务一"把登录逻辑写成文档"。
+# 每一步 = 一次模型回复（可选文本 + 若干工具调用）。测试与录讲稿都用它，
+# 因此同一份工程可以逐字重跑；接上真模型时只要把 --script 去掉。
+steps:
+  - text: "先在 src 里定位登录相关代码。"
+    tool_calls:
+      - name: search_code
+        args:
+          pattern: login
+          path: src
+
+  - text: "命中集中在路由与服务层，两个文件一起读。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/routes/login.ts
+      - name: read_file
+        args:
+          path: src/services/auth-service.ts
+
+  - text: "密码校验和令牌签发在 utils 里，用户读取在 repositories 里，都读一遍。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/utils/password.ts
+      - name: read_file
+        args:
+          path: src/utils/token.ts
+      - name: read_file
+        args:
+          path: src/repositories/user-repository.ts
+
+  - text: "受保护路由还经过认证中间件，它决定谁能通过，也读一遍。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/middleware/auth-middleware.ts
+
+  - text: "动手写文档之前先拍一张工作区现状。"
+    tool_calls:
+      - name: git_status
+
+  - text: "调用链已经读完，写成交付文档。"
+    tool_calls:
+      - name: write_file
+        args:
+          path: artifacts/login-flow.md
+          content: |
+            # 登录调用链
+
+            ## 入口
+            - `src/server.ts:5` 启动 HTTP 服务，监听 3001。
+            - `src/app.ts:9` 把 `loginRouter` 挂到 `/api`，因此登录地址是 `POST /api/login`。
+
+            ## 调用链
+            1. `src/routes/login.ts:7` 取 body 里的 `email` 与 `password`；任一为空直接 400（`login.ts:13`）。
+            2. `src/services/auth-service.ts:8` 用 `userRepository.findByEmail` 查用户，查不到抛 `User not found`。
+            3. `src/services/auth-service.ts:14` 调 `verifyPassword`，不匹配抛 `Invalid password`；两类失败在 `login.ts:21` 统一转成 401。
+            4. `src/utils/token.ts:3` 用 `issueAccessToken` 生成 `demo-token.<base64url(payload)>`。
+            5. 成功返回 `{ accessToken, user }`，`user` 只含 id、email、displayName、role。
+
+            ## 鉴权入口
+            - `src/middleware/auth-middleware.ts:11` 要求 `Authorization: Bearer <token>`，
+              `auth-middleware.ts:17` 调 `parseAccessToken`，解析失败直接 401。
+              它管的是“登录之后”的受保护路由；登录本身走 `POST /api/login`。
+
+            ## 数据来源
+            - `src/repositories/user-repository.ts:7` 只依赖 `queryOne("users", { email })`。
+            - `src/db/database.ts` 是内存假表，两条用户记录写在这里。
+
+            ## 两个必须知道的事实
+            - 口令校验是假的：`src/utils/password.ts:6` 比较 `passwordHash === "hash:" + 明文`，
+              不是哈希比对，**不能照搬到生产**。
+            - 令牌是 base64url 编码，没有签名：`parseAccessToken`（`src/utils/token.ts:8`）只认前缀，
+              任何人改 payload 都能通过解析，**当前不具备防伪能力**。
+  - text: "审批已通过，文档落在 artifacts/login-flow.md：入口、调用链、鉴权中间件与两条风险事实都写进去了。"

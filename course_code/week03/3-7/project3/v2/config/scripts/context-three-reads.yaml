@@ -1,0 +1,23 @@
+# 三次切片读同一个文件，凑出"前两步已经压成摘要"的现场：
+# keep_recent_turns=2，所以第三步之前，第一步的原文就不在上下文里了。
+# auth-service.ts 有 38 行正文，一次读满就超过 audit_max_lines=30，审计入库必然截断。
+steps:
+  - text: "先把 AuthService 的开头读进来。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/services/auth-service.ts
+          limit: 12
+  - text: "接着读中段，令牌与密码校验都在那里。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/services/auth-service.ts
+          offset: 13
+          limit: 12
+  - text: "最后把整个文件读一遍，这条会超审计的行数上限。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/services/auth-service.ts
+  - text: "三段读完：登录链路是 login 路由调 AuthService.verify，再由 TokenService 签发。第一步的原文此刻只是一行摘要，要引用它就得照抄参数重读。"

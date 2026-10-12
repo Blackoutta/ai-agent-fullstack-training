@@ -1,0 +1,8 @@
+{
+  "$schema": "https://langchain-ai.github.io/langgraph/schemas/langgraph.json",
+  "dependencies": ["."],
+  "graphs": {
+    "release_pipeline": "./studio_graph.py:graph"
+  },
+  "env": ".env"
+}

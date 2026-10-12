@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 运行产物（均可再生）
+*.sqlite
+*.sqlite3
+reports/
+test-reports/
+data/
+
+# 环境变量与本地密钥
+.env
+
+# 工具
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+
+# langgraph dev 本地状态
+.langgraph_api/
