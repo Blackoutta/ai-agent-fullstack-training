@@ -1,0 +1,9 @@
+{
+  "snapshot_id": "b9656bde7c3f640bddefd7bdefe5928d93dc869e0add3d6299e5b5646b0bd6a5",
+  "files": {
+    "app/orders.py": "649b3bfe7ead8b8f7cfad5a1b1b52c6411fbed25a6c4c49b1304c0cfce2334c4",
+    "tests/test_orders.py": "5ed3188f687c666112668281032b42a32afb52fb2e1c4d60397bf6763acf4266",
+    "docs/current.md": "4143b3d74bb528c800302c8256fdf892c0ba9020f6552c103a6d55291f385f2e",
+    "docs/legacy.md": "8d4a8e78ab56c9473f3937e50eb04492aaa660a33d957912f8cbf115f15bb82b"
+  }
+}

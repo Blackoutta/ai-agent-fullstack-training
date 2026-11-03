@@ -1,0 +1,3 @@
+ณฑfunction<｜tool▁sep｜>read
+json
+{"path":"docs/current.md","offset":1,"limit":50}

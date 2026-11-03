@@ -1,0 +1,72 @@
+{
+  "accepted": [
+    {
+      "issue_key": "tenant-filter",
+      "claim": "未按当前用户过滤",
+      "severity": "high",
+      "evidence": [
+        {
+          "path": "app/orders.py",
+          "excerpt": "SELECT id, user_id FROM orders ORDER BY id"
+        }
+      ],
+      "sources": [
+        "security"
+      ],
+      "evidence_status": "literal_verified"
+    }
+  ],
+  "rejected": [
+    {
+      "task_id": "security",
+      "reason": "schema_or_evidence",
+      "finding": {
+        "issue_key": "tenant-filter",
+        "claim": "未按当前用户过滤",
+        "severity": "high",
+        "evidence": [
+          {
+            "path": "../secret.txt",
+            "excerpt": "不应读取"
+          }
+        ]
+      }
+    }
+  ],
+  "conflicts": [
+    {
+      "issue_key": "tenant-filter",
+      "left": {
+        "issue_key": "tenant-filter",
+        "claim": "未按当前用户过滤",
+        "severity": "high",
+        "evidence": [
+          {
+            "path": "app/orders.py",
+            "excerpt": "SELECT id, user_id FROM orders ORDER BY id"
+          }
+        ],
+        "sources": [
+          "security"
+        ],
+        "evidence_status": "literal_verified"
+      },
+      "right": {
+        "issue_key": "tenant-filter",
+        "claim": "已按当前用户过滤",
+        "severity": "high",
+        "evidence": [
+          {
+            "path": "app/orders.py",
+            "excerpt": "SELECT id, user_id FROM orders ORDER BY id"
+          }
+        ]
+      }
+    }
+  ],
+  "incomplete": [
+    "performance"
+  ],
+  "needs_review": true,
+  "semantic_verification": "pending"
+}

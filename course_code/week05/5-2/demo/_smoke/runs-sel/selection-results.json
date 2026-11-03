@@ -1,0 +1,29 @@
+[
+  {
+    "case": "正例",
+    "should_select": true,
+    "did_select": false,
+    "verdict": "漏选（该读没读，可能直接硬做）",
+    "status": "exited",
+    "skill_reads": [],
+    "run_dir": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week05/5-2/demo/_smoke/runs-sel/正例/c239d281e7024de190ef0c44780f6961"
+  },
+  {
+    "case": "负例",
+    "should_select": false,
+    "did_select": false,
+    "verdict": "正确未选",
+    "status": "exited",
+    "skill_reads": [],
+    "run_dir": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week05/5-2/demo/_smoke/runs-sel/负例/03ba9be8ca154b5e986e8d8fe498d03b"
+  },
+  {
+    "case": "缺输入",
+    "should_select": true,
+    "did_select": false,
+    "verdict": "漏选（该读没读，可能直接硬做）",
+    "status": "exited",
+    "skill_reads": [],
+    "run_dir": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week05/5-2/demo/_smoke/runs-sel/缺输入/4e909d0a9748444a9a0704aff37ce70d"
+  }
+]

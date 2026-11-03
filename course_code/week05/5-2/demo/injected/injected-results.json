@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "task_id": "security",
+      "status": "completed",
+      "findings": [
+        {
+          "issue_key": "tenant-filter",
+          "claim": "未按当前用户过滤",
+          "severity": "high",
+          "evidence": [
+            {
+              "path": "app/orders.py",
+              "excerpt": "SELECT id, user_id FROM orders ORDER BY id"
+            }
+          ]
+        },
+        {
+          "issue_key": "tenant-filter",
+          "claim": "未按当前用户过滤",
+          "severity": "high",
+          "evidence": [
+            {
+              "path": "../secret.txt",
+              "excerpt": "不应读取"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "test",
+      "status": "completed",
+      "findings": [
+        {
+          "issue_key": "tenant-filter",
+          "claim": "已按当前用户过滤",
+          "severity": "high",
+          "evidence": [
+            {
+              "path": "app/orders.py",
+              "excerpt": "SELECT id, user_id FROM orders ORDER BY id"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

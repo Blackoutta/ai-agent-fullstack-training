@@ -1,0 +1,3 @@
+读取 docs/current.md、app/orders.py、tests/test_orders.py。只读，不运行命令。
+按“规则、实现观察、用户隔离、N+1 查询与测试覆盖、证据、未验证事项”给出 Markdown 报告。
+不能把静态分析写成测试通过，不改文件。

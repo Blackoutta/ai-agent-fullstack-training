@@ -1,0 +1,3 @@
+function<｜tool▁sep｜>grep
+json
+{"pattern": "user isolation|order list|query count", "path": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week05/5-2/demo/_smoke/project"}

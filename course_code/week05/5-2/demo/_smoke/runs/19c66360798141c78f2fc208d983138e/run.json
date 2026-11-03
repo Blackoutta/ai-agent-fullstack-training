@@ -1,0 +1,17 @@
+{
+  "run_id": "19c66360798141c78f2fc208d983138e",
+  "run_dir": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week05/5-2/demo/_smoke/runs/19c66360798141c78f2fc208d983138e",
+  "status": "exited",
+  "exit_code": 0,
+  "error": null,
+  "config": {
+    "pi_version": "1.2.0",
+    "model_requested": "deepseek/deepseek-chat",
+    "skill_sha256": "e12c619e37cd57f1c61f46b2c796c3941906d859d96c7a414d1ba44a35c8cfb2"
+  },
+  "latency_seconds": 18.847,
+  "snapshot_id": "b9656bde7c3f640bddefd7bdefe5928d93dc869e0add3d6299e5b5646b0bd6a5",
+  "snapshot_unchanged": true,
+  "task_success": null,
+  "cost": null
+}

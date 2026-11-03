@@ -1,0 +1,35 @@
+{
+  "event_count": 3,
+  "tool_call_count": 2,
+  "completed_tools": [
+    {
+      "id": "injected-1",
+      "tool": "read",
+      "args": {
+        "path": "missing.py"
+      },
+      "is_error": true,
+      "result": {
+        "error": "FILE_NOT_FOUND"
+      }
+    }
+  ],
+  "pending_ids": [
+    "injected-2"
+  ],
+  "labels": [
+    "tool_error",
+    "unfinished_tool_calls"
+  ],
+  "tokens": {
+    "input": null,
+    "output": null,
+    "cacheRead": null,
+    "cacheWrite": null
+  },
+  "models": [],
+  "provider_reported_cost": null,
+  "billing_cost": null,
+  "usage_scope": "parent_messages_only",
+  "root_cause": null
+}

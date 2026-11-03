@@ -1,0 +1,22 @@
+[
+  {
+    "id": "understand-001",
+    "kind": "understand",
+    "prompt": "只读定位订单列表入口。输出 path、function（函数名称）。每份输出包含 evidence 数组，每项为 {\"path\":\"项目内相对路径\",\"excerpt\":\"能逐字核对的非空原文\"}。纯 JSON，不加围栏。"
+  },
+  {
+    "id": "retrieve-001",
+    "kind": "retrieve",
+    "prompt": "只读检索 docs 当前有效的 SELECT 次数上限，忽略旧规则，输出 max_selects（整数）、source。每份输出包含 evidence 数组，每项为 {\"path\":\"项目内相对路径\",\"excerpt\":\"能逐字核对的非空原文\"}。纯 JSON，不加围栏。"
+  },
+  {
+    "id": "review-001",
+    "kind": "review",
+    "prompt": "只读检查订单列表。不得运行命令。输出 tenant_leak（是否可能返回其他用户订单）、n_plus_one（是否逐单查询明细）、verification（static）。每份输出包含 evidence 数组，每项为 {\"path\":\"项目内相对路径\",\"excerpt\":\"能逐字核对的非空原文\"}。纯 JSON，不加围栏。"
+  },
+  {
+    "id": "fix-001",
+    "kind": "fix",
+    "prompt": "读取 docs/current.md 和 app/orders.py。只用 edit 修改 app/orders.py：仅返回当前用户订单，完整返回订单明细，SELECT 总数不随订单数增长且最多 2 次，用户输入必须参数绑定。不得改 tests、docs，不运行命令。外层会独立验证。报告实际修改或失败。"
+  }
+]

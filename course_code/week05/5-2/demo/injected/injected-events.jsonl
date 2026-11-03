@@ -1,0 +1,3 @@
+{"type": "tool_execution_start", "toolCallId": "injected-1", "toolName": "read", "args": {"path": "missing.py"}}
+{"type": "tool_execution_end", "toolCallId": "injected-1", "toolName": "read", "isError": true, "result": {"error": "FILE_NOT_FOUND"}}
+{"type": "tool_execution_start", "toolCallId": "injected-2", "toolName": "read", "args": {"path": "app/orders.py"}}
