@@ -1,0 +1,361 @@
+{
+  "semantic": {
+    "question": "采购模板从哪下载？",
+    "repeat": 3,
+    "states": [
+      {
+        "state": "关闭",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "body_reads": 1,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 1244.2,
+        "total_range": [
+          777.4,
+          1258.8
+        ],
+        "generate_ms": 1217.6,
+        "generate_range": [
+          744.7,
+          1228.3
+        ],
+        "cache_stage_ms": 30.5,
+        "cache_stage_range": [
+          26.6,
+          32.7
+        ],
+        "tokens": "179/139"
+      },
+      {
+        "state": "开启·首轮",
+        "counts": {
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "approved_answer_reuses": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 11.1,
+        "total_range": [
+          11.0,
+          13.7
+        ],
+        "generate_ms": 0.0,
+        "generate_range": [
+          0.0,
+          0.0
+        ],
+        "cache_stage_ms": 11.1,
+        "cache_stage_range": [
+          11.0,
+          13.7
+        ],
+        "tokens": "0/0"
+      },
+      {
+        "state": "开启·复用",
+        "counts": {
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "approved_answer_reuses": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 12.8,
+        "total_range": [
+          12.2,
+          14.4
+        ],
+        "generate_ms": 0.0,
+        "generate_range": [
+          0.0,
+          0.0
+        ],
+        "cache_stage_ms": 12.8,
+        "cache_stage_range": [
+          12.2,
+          14.4
+        ],
+        "tokens": "0/0"
+      }
+    ]
+  },
+  "embedding": {
+    "question": "今年采购合同的违约金上限是多少？与去年模板相比变化多少？",
+    "repeat": 3,
+    "states": [
+      {
+        "state": "关闭",
+        "counts": {
+          "embedding_requests": 2,
+          "embedding_texts": 4,
+          "retrieval_requests": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 5471.4,
+        "total_range": [
+          3141.0,
+          5494.3
+        ],
+        "generate_ms": 5403.5,
+        "generate_range": [
+          2795.4,
+          5433.6
+        ],
+        "cache_stage_ms": 67.9,
+        "cache_stage_range": [
+          60.7,
+          345.6
+        ],
+        "tokens": "287/946"
+      },
+      {
+        "state": "开启·首轮",
+        "counts": {
+          "embedding_requests": 2,
+          "embedding_texts": 4,
+          "retrieval_requests": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3203.1,
+        "total_range": [
+          2765.9,
+          5650.6
+        ],
+        "generate_ms": 3128.8,
+        "generate_range": [
+          2698.0,
+          5484.8
+        ],
+        "cache_stage_ms": 74.3,
+        "cache_stage_range": [
+          67.9,
+          165.8
+        ],
+        "tokens": "287/579"
+      },
+      {
+        "state": "开启·复用",
+        "counts": {
+          "retrieval_requests": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3501.5,
+        "total_range": [
+          2723.2,
+          3720.9
+        ],
+        "generate_ms": 3470.0,
+        "generate_range": [
+          2691.4,
+          3688.8
+        ],
+        "cache_stage_ms": 31.8,
+        "cache_stage_range": [
+          31.5,
+          32.1
+        ],
+        "tokens": "287/578"
+      }
+    ]
+  },
+  "rag": {
+    "question": "今年采购合同的违约金上限是多少？与去年模板相比变化多少？",
+    "repeat": 3,
+    "states": [
+      {
+        "state": "关闭",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 4148.7,
+        "total_range": [
+          3013.8,
+          4186.1
+        ],
+        "generate_ms": 4103.6,
+        "generate_range": [
+          2968.8,
+          4140.4
+        ],
+        "cache_stage_ms": 45.1,
+        "cache_stage_range": [
+          45.0,
+          45.7
+        ],
+        "tokens": "287/702"
+      },
+      {
+        "state": "开启·首轮",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3912.6,
+        "total_range": [
+          3326.2,
+          5129.6
+        ],
+        "generate_ms": 3887.3,
+        "generate_range": [
+          3280.7,
+          5084.2
+        ],
+        "cache_stage_ms": 45.4,
+        "cache_stage_range": [
+          25.3,
+          45.5
+        ],
+        "tokens": "287/667"
+      },
+      {
+        "state": "开启·复用",
+        "counts": {
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3591.2,
+        "total_range": [
+          3379.9,
+          3758.7
+        ],
+        "generate_ms": 3589.9,
+        "generate_range": [
+          3378.4,
+          3757.4
+        ],
+        "cache_stage_ms": 1.3,
+        "cache_stage_range": [
+          1.3,
+          1.5
+        ],
+        "tokens": "287/632"
+      }
+    ]
+  },
+  "tool": {
+    "question": "今年采购合同的违约金上限是多少？与去年模板相比变化多少？",
+    "repeat": 3,
+    "states": [
+      {
+        "state": "关闭",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3380.3,
+        "total_range": [
+          2968.5,
+          3572.9
+        ],
+        "generate_ms": 3338.4,
+        "generate_range": [
+          2923.4,
+          3526.8
+        ],
+        "cache_stage_ms": 45.1,
+        "cache_stage_range": [
+          41.9,
+          46.1
+        ],
+        "tokens": "287/556"
+      },
+      {
+        "state": "开启·首轮",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "body_reads": 3,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 2894.1,
+        "total_range": [
+          2708.6,
+          3471.7
+        ],
+        "generate_ms": 2848.5,
+        "generate_range": [
+          2683.0,
+          3424.2
+        ],
+        "cache_stage_ms": 45.6,
+        "cache_stage_range": [
+          25.6,
+          47.5
+        ],
+        "tokens": "287/450"
+      },
+      {
+        "state": "开启·复用",
+        "counts": {
+          "retrieval_requests": 1,
+          "embedding_requests": 1,
+          "embedding_texts": 1,
+          "rerank_requests": 1,
+          "generation_requests": 1
+        },
+        "samples": 3,
+        "retried": 0,
+        "total_ms": 3606.6,
+        "total_range": [
+          3044.5,
+          3912.6
+        ],
+        "generate_ms": 3562.3,
+        "generate_range": [
+          3002.2,
+          3868.8
+        ],
+        "cache_stage_ms": 43.8,
+        "cache_stage_range": [
+          42.3,
+          44.3
+        ],
+        "tokens": "287/633"
+      }
+    ]
+  }
+}

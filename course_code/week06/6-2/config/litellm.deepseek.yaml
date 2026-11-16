@@ -1,0 +1,29 @@
+model_list:
+- model_name: rag-fast
+  litellm_params:
+    model: openai/deepseek-flash
+    api_base: https://api.deepseek.com/v1
+    api_key: os.environ/DEEPSEEK_API_KEY
+    timeout: 60
+    max_retries: 0
+- model_name: rag-capable
+  litellm_params:
+    model: openai/deepseek-flash
+    api_base: https://api.deepseek.com/v1
+    api_key: os.environ/DEEPSEEK_API_KEY
+    timeout: 60
+    max_retries: 0
+- model_name: rag-reasoning
+  litellm_params:
+    model: openai/deepseek-v4-pro
+    api_base: https://api.deepseek.com/v1
+    api_key: os.environ/DEEPSEEK_API_KEY
+    timeout: 90
+    max_retries: 0
+
+litellm_settings:
+  telemetry: false
+
+general_settings:
+  # 演示用：应用拿这把 key 调网关。生产应改成 provision_tenant.py 签发的虚拟密钥。
+  master_key: os.environ/LITELLM_MASTER_KEY

@@ -1,0 +1,9 @@
+[
+  {"id":"current-v3","tenant":"tenant-a","year":2026,"chunks":[
+    {"id":"current-v3-clause-8","text":"教学合同2026第三版第八条：违约金累计上限为合同总额的8%。"},
+    {"id":"current-v3-clause-9","text":"教学合同2026第三版第九条：本例违约金计算基数为合同总额。"}]},
+  {"id":"template-2025-v1","tenant":"tenant-a","year":2025,"chunks":[
+    {"id":"template-2025-clause-8","text":"教学模板2025第一版第八条：违约金累计上限为合同总额的10%。"}]},
+  {"id":"private-b","tenant":"tenant-b","year":2026,"chunks":[
+    {"id":"b-clause-8","text":"乙公司专有教学资料：违约金上限为合同总额的99%。"}]}
+]

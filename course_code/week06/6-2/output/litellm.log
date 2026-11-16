@@ -1,0 +1,43 @@
+INFO:     Started server process [98023]
+INFO:     Waiting for application startup.
+
+   ██╗     ██╗████████╗███████╗██╗     ██╗     ███╗   ███╗
+   ██║     ██║╚══██╔══╝██╔════╝██║     ██║     ████╗ ████║
+   ██║     ██║   ██║   █████╗  ██║     ██║     ██╔████╔██║
+   ██║     ██║   ██║   ██╔══╝  ██║     ██║     ██║╚██╔╝██║
+   ███████╗██║   ██║   ███████╗███████╗███████╗██║ ╚═╝ ██║
+   ╚══════╝╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝
+
+[92m13:02:56 - LiteLLM:WARNING[0m: utils.py:2898 - register_model: model=d9efd2f0ac5010a81869cee7e4ffe45b045b102c28e4b9d5acac6b57ca19c22e not in built-in cost map and no prefix/region variant matched; cache cost fields will default to 0. To track cache cost, add cache_creation_input_token_cost and cache_read_input_token_cost to model_info
+[92m13:02:56 - LiteLLM:WARNING[0m: utils.py:2898 - register_model: model=8e6e4f720128c189e07251f5f2e10c3e80a81506ddfa40a893c72eb80daddc95 not in built-in cost map and no prefix/region variant matched; cache cost fields will default to 0. To track cache cost, add cache_creation_input_token_cost and cache_read_input_token_cost to model_info
+[92m13:02:56 - LiteLLM:WARNING[0m: utils.py:2898 - register_model: model=6c49c81ea143de51549843d35871fb93ce4b51799c8a4a9309f2c7b7a537f03e not in built-in cost map and no prefix/region variant matched; cache cost fields will default to 0. To track cache cost, add cache_creation_input_token_cost and cache_read_input_token_cost to model_info
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:4000 (Press CTRL+C to quit)
+
+[1;37m#------------------------------------------------------------#[0m
+[1;37m#                                                            #[0m
+[1;37m#            'This product would be better if...'             #[0m
+[1;37m#        https://github.com/BerriAI/litellm/issues/new        #[0m
+[1;37m#                                                            #[0m
+[1;37m#------------------------------------------------------------#[0m
+
+ Thank you for using LiteLLM! - Krrish & Ishaan
+
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+
+
+[32mLiteLLM: Proxy initialized with Config, Set models:[0m
+[32m    rag-fast[0m
+[32m    rag-capable[0m
+[32m    rag-reasoning[0m
+INFO:     127.0.0.1:60091 - "GET /v1/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60092 - "GET /v1/model/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60093 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60095 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60096 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [98023]

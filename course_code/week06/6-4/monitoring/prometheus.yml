@@ -1,0 +1,49 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: pi-query-monitoring
+
+scrape_configs:
+  # Prometheus 自身，用于确认采集链路正常
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # 业务后端端点：订单查询的结果指标
+  # 一次订单查询即使调了多个工具，业务层也只按一个任务结算
+  - job_name: order-backend
+    scrape_interval: 5s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["host.docker.internal:9464"]
+        labels:
+          layer: business
+
+  # 宿主机系统指标（可选）：node_load1、node_memory_*、node_filesystem_* 等
+  # node-exporter 与 Prometheus 同在 compose 网络内，直接用服务名访问
+  - job_name: node-exporter
+    static_configs:
+      - targets: ["node-exporter:9100"]
+        labels:
+          layer: host
+
+  # Pi 会话端点：由 pi-prometheus 扩展暴露，端口随会话变化
+  # 扩展会把每个会话的采集地址写入 ~/.pi/metrics/targets/*.json，
+  # 这里用 file_sd_configs 读取，新开会话换了端口也能自动发现
+  - job_name: pi-session
+    scrape_interval: 5s
+    file_sd_configs:
+      - files:
+          - /etc/prometheus/targets/*.json
+        refresh_interval: 10s
+    relabel_configs:
+      # 扩展写出的是 127.0.0.1:端口，那是宿主机地址。
+      # Prometheus 跑在容器内，容器自己的 127.0.0.1 并不是宿主机，
+      # 因此把地址改写成 host.docker.internal，端口保持不变。
+      - source_labels: [__address__]
+        regex: "(?:127\\.0\\.0\\.1|localhost):(\\d+)"
+        target_label: __address__
+        replacement: "host.docker.internal:$1"
+      - target_label: layer
+        replacement: agent

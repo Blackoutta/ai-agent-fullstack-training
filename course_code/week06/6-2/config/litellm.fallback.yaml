@@ -1,0 +1,65 @@
+model_list:
+- model_name: rag-fast
+  litellm_params:
+    # openai/ 只表示 OpenAI 兼容协议，实际请求发往 api_base 指向的服务。
+    model: openai/deepseek-flash
+    api_base: os.environ/FLASH_API_BASE
+    api_key: os.environ/FLASH_API_KEY
+    max_retries: 0
+    timeout: 30
+    # 限流放在部署这一层：RPM 限制每分钟请求数，TPM 限制每分钟 Token 数。
+    rpm: 60
+    tpm: 60000
+    max_parallel_requests: 2
+
+- model_name: rag-reasoning
+  litellm_params:
+    model: openai/deepseek-v4-pro
+    api_base: os.environ/PRO_API_BASE
+    api_key: os.environ/PRO_API_KEY
+    max_retries: 0
+    timeout: 60
+    rpm: 30
+    tpm: 60000
+    max_parallel_requests: 1
+
+# 独立故障测试别名：指向本机未监听的端口，用来验证备用路径真的走了。
+# 它只是“制造故障”的入口，不代表任何模型能力；生产里不存在这种部署。
+# model 故意写成一个不存在的名字：这里的模型名永远不会被上游收到，只用来标记“坏部署”。
+- model_name: rag-failure-test
+  litellm_params:
+    model: openai/failure
+    api_base: http://127.0.0.1:65530/v1
+    api_key: local
+    max_retries: 0
+    timeout: 1
+    rpm: 60
+    tpm: 60000
+    max_parallel_requests: 1
+
+router_settings:
+  # 本层不重试：一次请求最多一次备用切换，避免连续尝试多个模型耗尽时间和预算。
+  num_retries: 0
+  max_fallbacks: 1
+  timeout: 90
+  # 失败一次即冷却 30 秒：故障部署暂时退出候选，减少重复访问。
+  # 冷却只是暂时避开故障节点，不代表它已经恢复，恢复仍要靠监控和真实请求验证。
+  allowed_fails: 1
+  cooldown_time: 30
+  fallbacks:
+  - rag-fast:
+    - rag-reasoning
+  - rag-failure-test:
+    - rag-reasoning
+  # 上下文超限走单独通道：只有服务返回可识别的超限错误、且备用部署窗口确实更大时才启用。
+  # “Pro” 这个名字不能证明窗口更大，窗口大小和模型能力是两个维度。
+  # context_window_fallbacks:
+  # - rag-fast:
+  #   - rag-reasoning
+
+litellm_settings:
+  telemetry: false
+
+general_settings:
+  # 本机演示网关的实验密钥，由 config/local.env 提供。
+  master_key: os.environ/LITELLM_MASTER_KEY

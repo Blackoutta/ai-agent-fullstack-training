@@ -1,0 +1,4 @@
+llama-index-core==0.14.25
+llama-index-llms-openai-like==0.8.1
+litellm[proxy]==1.108.0
+httpx[socks]==0.28.1
