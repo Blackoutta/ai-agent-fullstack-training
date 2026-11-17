@@ -1,0 +1,17 @@
+# Fixture: tag-triggered release build keeps sccache's compiler cache in the Actions cache.
+name: f39-sccache-gha
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+env:
+  SCCACHE_GHA_ENABLED: "true"
+  RUSTC_WRAPPER: sccache
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: mozilla-actions/sccache-action@v0.0.9
+      - run: cargo build-sbf && ./scripts/publish.sh

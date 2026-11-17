@@ -1,0 +1,20 @@
+# Fixture: claude-code-action with pre-v1 input names; the comment body reaches the old prompt input.
+name: f14-pre-v1-agent-inputs
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  review:
+    if: contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: Review this request. ${{ github.event.comment.body }}
+          custom_instructions: Be brief.
+          allowed_tools: "Bash(*)"
+          disallowed_tools: "WebFetch"

@@ -1,0 +1,20 @@
+# Fixture: correctly gated issue_comment job that fetches the mutable PR head (TOCTOU), opts out of the
+# checkout guard and runs an agent CLI from run:.
+name: f11-cli-fetch-toctou
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+jobs:
+  test:
+    if: github.event.issue.pull_request && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          allow-unsafe-pr-checkout: true
+      - run: |
+          git fetch origin pull/${{ github.event.issue.number }}/head:pr
+          gh pr checkout ${{ github.event.issue.number }}
+      - run: npx @anthropic-ai/claude-code -p "review" && claude -p "summarize"

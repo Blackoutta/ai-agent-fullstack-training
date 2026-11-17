@@ -1,0 +1,13 @@
+# Fixture: array-form allowlist that also admits CONTRIBUTOR, which only means one earlier merged commit.
+name: f25-fromjson-allowlist-contributor
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+jobs:
+  release:
+    if: startsWith(github.event.comment.body, '/release') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR","CONTRIBUTOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "privileged command"

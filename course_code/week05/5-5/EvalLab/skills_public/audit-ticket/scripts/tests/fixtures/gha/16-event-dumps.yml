@@ -1,0 +1,11 @@
+# Fixture: whole-event dumps and commit messages expanded in shell steps.
+name: f16-event-dumps
+on: [issues, push]
+permissions:
+  contents: read
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(github.event.issue) }}'
+      - run: echo "${{ github.event.commits[0].message }}"

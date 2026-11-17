@@ -1,0 +1,16 @@
+# Fixture: tag-triggered release job passes a cache switch to a repository-local setup action that wraps a cache writer.
+name: f45-local-setup-wrapper
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup-python-env
+        with:
+          enable-cache: true
+      - run: make release

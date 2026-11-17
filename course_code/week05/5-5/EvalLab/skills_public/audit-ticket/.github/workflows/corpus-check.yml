@@ -1,0 +1,36 @@
+name: corpus-check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  corpus:
+    name: counts, index, version, hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for the commit-message check)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          submodules: false
+          persist-credentials: false
+
+      - name: Corpus counts, index links, version agreement and submodule pins
+        run: bash scripts/check-corpus.sh
+
+      - name: Script self-tests
+        run: for t in scripts/tests/*.sh; do echo "== $t"; bash "$t" || exit 1; done
+
+      - name: Repository hygiene (no env / state / local assistant files tracked)
+        run: bash scripts/check-hygiene.sh
+
+      - name: No AI-attribution trailers in PR commits
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: bash scripts/check-attribution.sh "origin/${BASE_REF}..HEAD"

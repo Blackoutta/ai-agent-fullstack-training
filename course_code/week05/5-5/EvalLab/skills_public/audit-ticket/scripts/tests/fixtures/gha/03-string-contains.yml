@@ -1,0 +1,16 @@
+# Fixture: string-form contains(); on `issues` there is no comment object, the field is '' and the test is true.
+name: f03-string-contains
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  agent:
+    if: contains('OWNER,MEMBER,COLLABORATOR', github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "agent would run"

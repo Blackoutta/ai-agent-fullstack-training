@@ -33,6 +33,7 @@
 
 ## 5-5 目录说明
 
-- `EvalLab.zip`：阶段五完整项目，按 zip 原名保留。解压后 `EvalLab/` 包含 `codebase/`（受治理的 Codebase Agent）、`codebaseEval/`（本地 Eval Web 平台）、`skills/`（software-delivery 系列交付技能）、`skills_public/`（grill-me、audit-ticket、deep-research、security-review、ultrareview 等公共技能）、`requirements.txt` 与《Eval 平台开发需求.pdf》。
-- `codebaseEval/`：Vue 3 + TypeScript 前端、Python 标准库 API、SQLite 与独立 Node worker。支持 Benchmark 题库、策略配置、实验工作台、Trace、评审中心、评测概览/失败聚类和回归对比；`offline` 可先验证链路，`live` 才调用真实模型，默认只读审查本地可信仓库。
+- `EvalLab/`：阶段五完整项目（已解压）。包含 `codebase/`（受治理的 Codebase Agent）、`codebaseEval/`（本地 Eval Web 平台）、`skills/`（software-delivery 系列交付技能）、`skills_public/`（grill-me、audit-ticket、deep-research、security-review、ultrareview 等公共技能）、`requirements.txt` 与《Eval 平台开发需求.pdf》；已剔除 `.git` 元数据、`__pycache__`、`.DS_Store` 等非课程文件。
+- `EvalLab/codebaseEval/`：Vue 3 + TypeScript 前端、Python 标准库 API、SQLite 与独立 Node worker。支持 Benchmark 题库、策略配置、实验工作台、Trace、评审中心、评测概览/失败聚类和回归对比；`offline` 可先验证链路，`live` 才调用真实模型，默认只读审查本地可信仓库。
+- `EvalLab/codebaseEval/plans/`：PM 与架构师产出的工作包索引、TASK 开发任务计划、开发任务设计，以及功能开发/修复/补全工作包模板。
 - 平台口径以项目 README 为准：`completed` 只表示执行结束，不等于 `pass`；未知、取消、离线结果单列；Judge 使用与被评策略相同的模型；RAG 为关键词/BM25 检索；独立工作区不是操作系统沙箱。

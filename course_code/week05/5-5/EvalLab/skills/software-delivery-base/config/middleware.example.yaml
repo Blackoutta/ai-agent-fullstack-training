@@ -1,0 +1,37 @@
+# 中间件配置模板（示例）—— 安全占位，可提交到仓库
+#
+# 使用方法：复制本文件为 middleware.local.yaml 并填入实际值。
+# middleware.local.yaml 已被 config/.gitignore 忽略，请勿提交真实凭据。
+#
+# skill 在阶段0读取本配置，在阶段3自动注入到生成的后端 Spring Boot
+# application.yml / application-dev.yml 中（datasource、redis 等）。
+# 中间件配置优先级高于设计文档中的通用默认值；设计文档不得覆盖本配置的连接信息。
+
+mysql:
+  host: localhost
+  port: 3306
+  database: app_db
+  username: root
+  password: ${MYSQL_PASSWORD}        # 推荐：用环境变量；本地开发可在 .local.yaml 填实际密码
+  params: useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+
+redis:
+  enabled: false                      # 设为 true 时生成 Redis 配置
+  host: localhost
+  port: 6379
+  password: ${REDIS_PASSWORD:}
+  database: 0
+
+# —— 可按需扩展其他中间件（设 enabled: true 后会注入对应配置）——
+# kafka:
+#   enabled: false
+#   bootstrap-servers: localhost:9092
+# mongodb:
+#   enabled: false
+#   uri: mongodb://localhost:27017/app_db
+# rabbitmq:
+#   enabled: false
+#   host: localhost
+#   port: 5672
+#   username: guest
+#   password: ${RABBITMQ_PASSWORD:guest}

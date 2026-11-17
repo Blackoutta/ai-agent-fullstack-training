@@ -1,0 +1,12 @@
+# Fixture: comment trigger written as a YAML flow mapping, command match only, no author gate.
+name: f40-flow-mapping-trigger
+on:
+  issue_comment: {types: [created]}
+permissions:
+  contents: write
+jobs:
+  deploy:
+    if: startsWith(github.event.comment.body, '/deploy')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo deploy

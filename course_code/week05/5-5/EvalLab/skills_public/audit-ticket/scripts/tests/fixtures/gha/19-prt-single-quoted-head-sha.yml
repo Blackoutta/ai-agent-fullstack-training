@@ -1,0 +1,15 @@
+# Fixture: the same pull_request_target head checkout, written with a single-quoted expression.
+name: f19-prt-single-quoted-head-sha
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: '${{ github.event.pull_request.head.sha }}'
+      - run: npm ci && npm test

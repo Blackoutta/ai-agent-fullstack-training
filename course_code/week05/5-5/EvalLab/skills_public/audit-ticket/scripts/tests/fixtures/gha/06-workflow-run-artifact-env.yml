@@ -1,0 +1,22 @@
+# Fixture: workflow_run consumer writes artifact content into GITHUB_ENV and runs a script from the artifact.
+name: f06-workflow-run-artifact-env
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+permissions:
+  contents: read
+  deployments: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr-meta
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "PR_NUMBER=$(cat pr_number.txt)" >> "$GITHUB_ENV"
+      - run: bash ./dist/deploy.sh
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}

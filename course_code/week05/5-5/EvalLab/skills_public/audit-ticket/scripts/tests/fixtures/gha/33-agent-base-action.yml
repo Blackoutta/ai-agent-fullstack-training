@@ -1,0 +1,17 @@
+# Fixture: comment-triggered agent job on the lower-level claude-code-base-action, holding write scopes.
+name: f33-agent-base-action
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  review:
+    if: contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: Review the pull request this comment was posted on.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}

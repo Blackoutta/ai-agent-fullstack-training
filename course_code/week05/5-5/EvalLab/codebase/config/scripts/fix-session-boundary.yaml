@@ -1,0 +1,49 @@
+# 离线决策脚本：任务二"让失败的会话到期用例变绿"。
+# 顺序就是这类任务的工作简报：拿基线 → 读红用例与实现 → 打补丁 → 复跑 → 看差异。
+# 打补丁那一步要人工审批；补丁的原文写在这里，等于"改什么"在开工前就摆给人看。
+steps:
+  - text: "先跑一次测试拿基线，看红在哪几条。"
+    tool_calls:
+      - name: run_test
+        args: {}
+
+  - text: "三条红用例都指向会话到期判断，测试和实现一起读。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: tests/session-boundary.test.ts
+      - name: read_file
+        args:
+          path: src/auth/session-policy.ts
+
+  - text: "实现只比到「哪天」，没比到「哪一刻」：把整串时间戳拿下来比。"
+    tool_calls:
+      - name: apply_patch
+        args:
+          path: src/auth/session-policy.ts
+          edits:
+            # oldText 要与文件逐字一致，所以从函数签名那一行起写：
+            # 块标量按第一行的缩进定基线，后面两行多出来的两个空格才会被保留下来。
+            - oldText: |-
+                export function isSessionExpired(session: ExpiringSession, now: Date): boolean {
+                  const expiresOn = session.expiresAt.slice(0, 10);
+                  const currentDay = now.toISOString().slice(0, 10);
+                  return expiresOn < currentDay;
+                }
+              newText: |-
+                export function isSessionExpired(session: ExpiringSession, now: Date): boolean {
+                  return new Date(session.expiresAt).getTime() <= now.getTime();
+                }
+
+  - text: "补丁已按批准的原文写入，复跑确认全绿。"
+    tool_calls:
+      - name: run_test
+        args: {}
+
+  - text: "复跑全绿，最后用 git_diff 说清这次改了哪几行。"
+    tool_calls:
+      - name: git_diff
+        args:
+          path: src/auth/session-policy.ts
+
+  - text: "缺陷在 src/auth/session-policy.ts：到期时刻之前被当成仍然有效。三条红用例现在全绿，tests 目录一行未动。"

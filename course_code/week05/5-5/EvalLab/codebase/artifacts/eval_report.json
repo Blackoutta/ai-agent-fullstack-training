@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-09-28T15:33:55.718Z",
+  "decider": "mock",
+  "outcomes": [
+    {
+      "task": "understand",
+      "display_name": "任务一 · 代码理解（把登录逻辑写成说明文档）",
+      "run_id": "10d9ac52-ae5e-496b-add0-587fd7749e23",
+      "decider": "mock:understand-login.yaml",
+      "status": "awaiting_approval",
+      "stop_code": "AWAITING_APPROVAL",
+      "stop_reason": "工具调用正在等待人工审批",
+      "accepted": false,
+      "deliverable_path": "artifacts/login-flow.md",
+      "delivered": false,
+      "claim_without_evidence": false,
+      "tool_calls": 9,
+      "approvals": 1,
+      "tokens": 11999,
+      "cost_usd": 0.0039813,
+      "elapsed_ms": 80,
+      "evidence": {
+        "workspace": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-understand/repo",
+        "database": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-understand/eval.db",
+        "trace_id": "10d9ac52-ae5e-496b-add0-587fd7749e23"
+      },
+      "uncovered": [
+        "本轮停在审批：完成审批并执行获批操作后才能判定交付"
+      ]
+    },
+    {
+      "task": "fix_tests",
+      "display_name": "任务二 · 测试生成与修复（让失败用例变绿）",
+      "run_id": "a3903b6c-1643-4c12-98cb-70b46897b422",
+      "decider": "mock:fix-session-boundary.yaml",
+      "status": "awaiting_approval",
+      "stop_code": "AWAITING_APPROVAL",
+      "stop_reason": "工具调用正在等待人工审批",
+      "accepted": false,
+      "deliverable_path": "src/auth/session-policy.ts",
+      "delivered": false,
+      "claim_without_evidence": false,
+      "tool_calls": 1,
+      "approvals": 1,
+      "tokens": 1424,
+      "cost_usd": 0.00043440000000000004,
+      "elapsed_ms": 4,
+      "evidence": {
+        "workspace": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-fix_tests/repo",
+        "database": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-fix_tests/eval.db",
+        "trace_id": "a3903b6c-1643-4c12-98cb-70b46897b422"
+      },
+      "uncovered": [
+        "本轮停在审批：完成审批并执行获批操作后才能判定交付"
+      ]
+    },
+    {
+      "task": "debt_audit",
+      "display_name": "任务三 · 技术债巡检（纯配置新增的那一类）",
+      "run_id": "ac3914f2-fd25-48f5-98eb-3fc56e4e048e",
+      "decider": "mock:debt-audit.yaml",
+      "status": "completed",
+      "stop_code": "COMPLETED",
+      "stop_reason": "模型给出最终回答，Loop 正常收口",
+      "accepted": true,
+      "deliverable_path": "docs/tech-debt-audit.md",
+      "delivered": true,
+      "claim_without_evidence": false,
+      "tool_calls": 4,
+      "approvals": 0,
+      "tokens": 8057,
+      "cost_usd": 0.0026196,
+      "elapsed_ms": 41,
+      "evidence": {
+        "workspace": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-debt_audit/repo",
+        "database": "/Users/wilson/Desktop/AI Agent 全栈工程师训练营/正式课内容/code/week03/第三章/project3/.eval-runs/2026-09-28T15-33-55-544Z-debt_audit/eval.db",
+        "trace_id": "ac3914f2-fd25-48f5-98eb-3fc56e4e048e"
+      },
+      "uncovered": []
+    }
+  ],
+  "uncovered": [
+    "任务二的新增测试能力需单独验收：本报告只覆盖既有失败用例驱动的修复闭环"
+  ]
+}

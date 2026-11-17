@@ -1,0 +1,30 @@
+{
+  "name": "codebase-agent-pi-v2",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "阶段三 Codebase Agent：在阶段二工具运行时之上，用 pi 扩展点挂载十件仓库工具，HITL 经 HTTP 交给 LangGraph",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run tests/unit",
+    "cli": "node --import tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@earendil-works/pi-agent-core": "0.87.1",
+    "@earendil-works/pi-ai": "0.87.1",
+    "@earendil-works/pi-coding-agent": "0.87.1",
+    "commander": "14.0.0",
+    "typebox": "1.3.7",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.4",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "4.1.9"
+  }
+}

@@ -1,0 +1,12 @@
+# Fixture: whole pull_request object dumped into a shell step through toJson (mixed case).
+name: f31-tojson-mixedcase-event
+on:
+  pull_request_target:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJson(github.event.pull_request) }}' > pr.json

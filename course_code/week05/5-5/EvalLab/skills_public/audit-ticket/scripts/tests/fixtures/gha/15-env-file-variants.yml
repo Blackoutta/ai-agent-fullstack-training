@@ -1,0 +1,27 @@
+# Fixture: pull_request_target with the less obvious checkout and env-file forms.
+name: f15-env-file-variants
+on:
+  pull_request_target:
+    types: [opened]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          path: merged
+      - run: echo "BRANCH=${HEAD_REF}" | tee -a "$GITHUB_ENV"
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('PR_TITLE', context.payload.pull_request.title)
+            core.addPath(process.env.GITHUB_WORKSPACE + '/bin')

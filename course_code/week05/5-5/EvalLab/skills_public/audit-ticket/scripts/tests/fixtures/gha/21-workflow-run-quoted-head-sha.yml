@@ -1,0 +1,16 @@
+# Fixture: workflow_run job checks out the triggering run's head commit through a quoted expression.
+name: f21-workflow-run-quoted-head-sha
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+permissions:
+  contents: write
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: "${{ github.event.workflow_run.head_sha }}"
+      - run: ./scripts/coverage-report.sh

@@ -1,0 +1,12 @@
+# Fixture: the whole github context, event payload included, dumped into a shell step.
+name: f32-tojson-github-context
+on:
+  pull_request_target:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(github) }}'

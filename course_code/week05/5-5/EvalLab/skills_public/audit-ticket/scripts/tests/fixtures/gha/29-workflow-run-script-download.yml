@@ -1,0 +1,20 @@
+# Fixture: workflow_run consumer downloads the triggering run's artifact through actions/github-script and runs a script from it.
+name: f29-workflow-run-script-download
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({ ...context.repo, run_id: context.payload.workflow_run.id })
+            const zip = await github.rest.actions.downloadArtifact({ ...context.repo, artifact_id: data.artifacts[0].id, archive_format: 'zip' })
+            require('fs').writeFileSync('pr.zip', Buffer.from(zip.data))
+      - run: unzip pr.zip && bash ./comment.sh

@@ -1,0 +1,26 @@
+# Monthly version-update PRs for the vendored Trail of Bits submodule and the pinned GitHub Actions.
+# Never auto-merge them. A submodule bump moves only the gitlink, so scripts/check-corpus.sh fails it until
+# a maintainer has reviewed the upstream delta and updated the README pin on the same branch — the
+# procedure is CONTRIBUTING.md §5 ("Bumping vendor/trailofbits").
+# cooldown skips upstream changes younger than a week. For a submodule the age is the commit's committer
+# date, which whoever makes the commit sets, so it is a convenience delay, not a control.
+version: 2
+updates:
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "chore(vendor)"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(ci)"

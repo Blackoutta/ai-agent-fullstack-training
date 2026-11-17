@@ -1,0 +1,31 @@
+
+# External Claude skill submodules (re-fetched via: git submodule update --init)
+.claude/skills/ext/
+
+# >>> solana-ai-kit config — gitignored by default; run /commit-claude-config to version it >>>
+.claude/
+CLAUDE.md
+.mcp.json
+# <<< solana-ai-kit config <<<
+
+# solana-ai-kit local-only (never committed)
+CLAUDE.local.md
+.claude/context/
+.env
+.env.local
+
+# Proprietary SotaSec KB — dev-time SOURCE only, separate nested repo, never shipped
+solana-security-kb/
+
+# Audit run outputs
+audit_*/
+
+# Incident-response run outputs (raw transaction corpora + off-chain logs may carry PII;
+# each incident_<n>/ also self-ignores with its own .gitignore of "*")
+incident_*/
+
+# Cross-audit memory store (per-project state, never committed by default)
+.audit-memory/
+
+# Rust tool build artifacts
+tools/auditor-tools/target/

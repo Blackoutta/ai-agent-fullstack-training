@@ -1,0 +1,36 @@
+# shared-test-utils — PoC exploit-harness support crate (auditor-skill)
+#
+# One shared crate that every per-finding PoC crate under `templates/poc/` depends
+# on by RELATIVE PATH. It provides the Mollusk bring-up helper, a small set of
+# account fixtures, and the assertion macros that encode the PoC contract
+# ("exploit succeeds on the vulnerable arm / is rejected on the fixed arm").
+#
+# This is TEMPLATE SOURCE. It is NOT compiled at skill-authoring time — the
+# `poc-engineer` copies the `templates/poc/` tree into `audit_<n>/poc/F-xxx/` and
+# the user's Solana toolchain builds it at audit time (see run.sh: `cargo build-sbf`,
+# platform-tools >= v1.54 / cargo >= 1.85).
+#
+# Version note: the crate versions below track the current SVM test stack. If the
+# copied crate fails to resolve, move these framework crates to the versions the
+# audited repo uses. Framework crates by default: a crate copied from the target's
+# manifest runs its build script in the recorded execution mode, so add one only
+# when the PoC needs it.
+
+[package]
+name = "shared-test-utils"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+
+[dependencies]
+# SVM in-process runner: loads a compiled .so and executes one instruction.
+mollusk-svm = "0.13"
+# Account / Pubkey / Rent primitives used by the fixtures.
+solana-account = "3"
+solana-pubkey = "4"
+solana-rent = "3"
+solana-system-interface = "3"
+# The zero-trimmed sha256 of each program mollusk_for loads (its `loaded` marker).
+# Already in mollusk-svm's dependency tree.
+sha2 = "0.10"

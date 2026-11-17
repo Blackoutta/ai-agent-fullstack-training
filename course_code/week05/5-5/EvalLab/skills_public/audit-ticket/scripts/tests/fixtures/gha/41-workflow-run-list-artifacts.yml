@@ -1,0 +1,20 @@
+# Fixture: workflow_run consumer lists the triggering run's artifacts through github-script and fetches one by URL.
+name: f41-workflow-run-list-artifacts
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({ ...context.repo, run_id: context.payload.workflow_run.id })
+            const res = await github.request(data.artifacts[0].archive_download_url)
+            require('fs').writeFileSync('artifact.zip', Buffer.from(res.data))
+      - run: unzip artifact.zip && ./apply.sh

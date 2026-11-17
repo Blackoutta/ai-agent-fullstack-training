@@ -1,0 +1,10 @@
+#!/bin/sh
+# Block AI-assistant attribution trailers in commit messages.
+# Scoped to attribution trailers only, so legitimate mentions of Claude/Anthropic
+# in commit subjects (this repo is about Claude skills) are not blocked.
+msg_file="$1"
+if grep -qiE '^(Co-Authored-By: .*(Claude|Anthropic|noreply@anthropic\.com))|(Generated with .*Claude)|(🤖 Generated)' "$msg_file"; then
+  echo "commit-msg: remove the AI attribution trailer before committing." >&2
+  exit 1
+fi
+exit 0

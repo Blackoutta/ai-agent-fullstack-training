@@ -1,0 +1,29 @@
+{
+  "name": "codebase-eval-workbench",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": { "node": "^22.12.0 || ^24.0.0 || >=26.0.0" },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "check": "vue-tsc --noEmit",
+    "build": "npm run check && vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vue": "3.5.44",
+    "lucide-vue-next": "0.468.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.1",
+    "@vue/test-utils": "2.4.6",
+    "jsdom": "26.1.0",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "vitest": "5.0.5",
+    "vue-tsc": "3.1.1"
+  },
+  "overrides": {
+    "glob": "10.5.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "codebase-eval",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local evaluation workspace for the governed Codebase Agent",
+  "engines": { "node": ">=22.19.0" },
+  "scripts": {
+    "setup": "npm --prefix ../codebase ci && npm --prefix frontend ci && npm --prefix frontend run build",
+    "start": "python3 -m backend.server",
+    "test": "python3 -m unittest discover -s tests -v",
+    "check": "npm --prefix frontend run check",
+    "build": "npm --prefix frontend run build",
+    "test:frontend": "npm --prefix frontend test",
+    "test:bridge": "python3 -m unittest discover -s bridge -p 'test_*.py' -v"
+  }
+}

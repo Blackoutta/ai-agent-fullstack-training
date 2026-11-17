@@ -1,0 +1,15 @@
+# Fixture: tag-triggered release job on the uv setup action, whose package cache lives in the Actions cache.
+name: f43-setup-uv
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build && uv publish

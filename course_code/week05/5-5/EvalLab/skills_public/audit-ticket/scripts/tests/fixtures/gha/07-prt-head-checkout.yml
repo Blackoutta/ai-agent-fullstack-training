@@ -1,0 +1,22 @@
+# Fixture: pull_request_target checks out the PR head, expands the title in a shell and builds with a deploy secret.
+name: f07-prt-head-checkout
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: |
+          echo "PR title is ${{ github.event.pull_request.title }}"
+      - env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: echo "PR_TITLE=$TITLE" >> "$GITHUB_ENV"
+      - run: anchor build && solana-verify build
+        env:
+          ANCHOR_WALLET: ${{ secrets.DEPLOY_KEYPAIR }}

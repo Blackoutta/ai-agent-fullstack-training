@@ -1,0 +1,13 @@
+# Fixture: array deny-list; every association that is not listed (CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, ...) passes.
+name: f17-fromjson-denylist
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+jobs:
+  command:
+    if: ${{ !contains(fromJSON('["NONE","FIRST_TIMER"]'), github.event.comment.author_association) }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "privileged command"

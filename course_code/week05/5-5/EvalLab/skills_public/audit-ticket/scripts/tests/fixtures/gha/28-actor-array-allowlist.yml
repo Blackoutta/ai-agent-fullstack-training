@@ -1,0 +1,13 @@
+# Fixture: pull_request_target allowlists github.actor through an array; on this trigger the actor is whoever last acted on the PR.
+name: f28-actor-array-allowlist
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+permissions:
+  contents: write
+jobs:
+  build:
+    if: contains(fromJSON('["renovate[bot]","release-bot"]'), github.actor)
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "privileged build"

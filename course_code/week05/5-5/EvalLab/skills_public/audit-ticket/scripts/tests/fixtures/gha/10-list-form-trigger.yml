@@ -1,0 +1,11 @@
+# Fixture: list-form trigger, command match only, no author gate.
+name: f10-list-form-trigger
+on: [issue_comment, issues]
+permissions:
+  contents: read
+jobs:
+  deploy:
+    if: contains(github.event.comment.body, '/deploy')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo deploy

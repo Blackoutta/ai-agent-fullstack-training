@@ -1,0 +1,10 @@
+# 离线决策脚本：专给"调用方点名的脚本优先于任务条目里那份"演示用。
+# 领的是 understand 这类任务（tasks.yaml 给它配的是 understand-login.yaml，七步），
+# 只要命令行给了 --script，这份两步的脚本就说了算——跑几步、说什么，全看点名的那份。
+steps:
+  - text: "这份脚本是 --script 点名带进来的，它盖过 tasks.yaml 里 understand 那条的 script。"
+    tool_calls:
+      - name: read_directory
+        args: {}
+
+  - text: "目录看过了，这条运行的决策顺序由点名的这份脚本说了算。"

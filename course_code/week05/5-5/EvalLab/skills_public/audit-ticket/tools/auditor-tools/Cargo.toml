@@ -1,0 +1,33 @@
+[package]
+name = "auditor-tools"
+version = "0.1.0"
+edition = "2021"
+description = "Host-side static-analysis CLI for Solana/Anchor codebases: risky-surface scanner and cross-audit findings memory."
+license = "MIT"
+
+[lib]
+name = "auditor_tools"
+path = "src/lib.rs"
+
+[[bin]]
+name = "audit-scan"
+path = "src/bin/audit-scan.rs"
+
+[[bin]]
+name = "audit-mem"
+path = "src/bin/audit-mem.rs"
+
+[dependencies]
+syn = { version = "2", features = ["full", "extra-traits", "visit"] }
+proc-macro2 = { version = "1", features = ["span-locations"] }
+quote = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+walkdir = "2"
+clap = { version = "4", features = ["derive"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+sha2 = "0.10"
+anyhow = "1"
+
+[profile.release]
+opt-level = 2

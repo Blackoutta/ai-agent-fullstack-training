@@ -1,0 +1,15 @@
+# Fixture: pull_request_target checks out the fork repository (quoted) at its default branch; no ref: expression.
+name: f20-prt-quoted-fork-repository
+on:
+  pull_request_target:
+    types: [opened]
+permissions:
+  contents: write
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          repository: "${{ github.event.pull_request.head.repo.full_name }}"
+      - run: make lint

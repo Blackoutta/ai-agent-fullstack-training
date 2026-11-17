@@ -1,0 +1,16 @@
+# Fixture: one OR across objects; on issue_comment the issue opener's association satisfies the gate.
+name: f02-cross-object-or
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  agent:
+    if: contains(github.event.comment.body, '@claude') && (github.event.comment.author_association == 'MEMBER' || github.event.issue.author_association == 'MEMBER' || github.event.issue.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "agent would run"

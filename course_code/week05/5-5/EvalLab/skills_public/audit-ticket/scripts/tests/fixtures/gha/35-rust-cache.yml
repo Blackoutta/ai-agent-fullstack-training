@@ -1,0 +1,14 @@
+# Fixture: tag-triggered release job restores the Rust build cache through a third-party cache action.
+name: f35-rust-cache
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build-sbf && ./scripts/publish.sh

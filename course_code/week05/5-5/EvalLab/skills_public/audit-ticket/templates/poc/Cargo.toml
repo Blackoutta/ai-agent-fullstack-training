@@ -1,0 +1,60 @@
+# Per-finding proof-of-concept crate — TEMPLATE.
+#
+# The `poc-engineer` copies this whole `templates/poc/` directory to
+# `audit_<n>/poc/F-xxx/` and fills the {PLACEHOLDERS}. One crate == one finding.
+#
+# The crate compiles the SAME entrypoint two ways, selected by a cargo feature:
+#   --features vulnerable  → the minimized reproduction of the flaw (exploit lands)
+#   --features fixed       → the flaw closed (same exploit is rejected)
+# The two arms are mutually exclusive; `default = ["fixed"]` so a bare `cargo build`
+# is the safe (patched) one.
+#
+# ── Fill these in ──────────────────────────────────────────────────────────────
+#   {PROGRAM_NAME} : this crate's package name, snake_case, e.g. `poc_f_012_vault`.
+#                    Reuse the SAME token as the compiled .so base name in run.sh
+#                    and in the `mollusk_for(.., "{PROGRAM_NAME}")` calls in tests.
+# ───────────────────────────────────────────────────────────────────────────────
+
+[package]
+name = "{PROGRAM_NAME}"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+
+# Its own workspace root, so cargo never looks for one in a parent directory: not
+# above the scratch copy `run.sh` builds from, and not in the audited repo this
+# crate sits in, whose own `[workspace]` would claim it and refuse to build it.
+[workspace]
+
+# `cdylib` so `cargo build-sbf` can emit the loadable `.so` Mollusk runs;
+# `lib`   so the `tests/` can import this crate's types (state structs, ids).
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = ["fixed"]
+vulnerable = []
+fixed = []
+
+[dependencies]
+# Framework crates by default, at the audited program's versions. Native example
+# shown; for an Anchor target swap in `anchor-lang`/`anchor-spl`, for Pinocchio swap
+# in `pinocchio`. A crate copied from the target's manifest runs its build script in
+# the recorded execution mode, so add one only when the PoC needs it.
+solana-program = "3"
+borsh = "1"
+
+[dev-dependencies]
+# mollusk-svm loads a COMPILED .so — it needs an SBF build first, NOT `cargo test`
+# alone. Build with `cargo build-sbf --tools-version v1.54` (or newer): the default
+# bundled toolchain ships platform-tools v1.51 / cargo 1.84, which cannot parse the
+# edition2024 manifests in the modern mollusk-svm dependency tree. Platform-tools
+# >= v1.54 bundles cargo >= 1.85, which builds the graph with no pinning. `run.sh`
+# selects the toolchain and wires SBF_OUT_DIR for you.
+mollusk-svm = "0.13"
+solana-sdk = "3"
+solana-account = "3"
+# The shared harness (bring-up helper, fixtures, assert macros). RELATIVE PATH —
+# it is copied alongside this crate, so the path stays `./shared-test-utils`.
+shared-test-utils = { path = "shared-test-utils" }

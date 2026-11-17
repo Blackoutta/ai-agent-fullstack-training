@@ -1,0 +1,12 @@
+# Fixture (negative control): push-only workflow that merely holds issues: write; R1 must stay silent.
+name: f09-push-only-negative
+on:
+  push:
+    branches: [main]
+permissions:
+  issues: write
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok

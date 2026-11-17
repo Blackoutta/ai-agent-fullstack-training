@@ -1,0 +1,8 @@
+# pi 扩展点自检脚本：只调一次 git_status，然后收口。
+# 用它可以在完全不联网的情况下验证「十件工具确实注册进了 pi」。
+steps:
+  - text: 先拍一张仓库现状。
+    tool_calls:
+      - name: git_status
+        args: {}
+  - text: 工作区干净，基线提交在位，扩展点注册成功。

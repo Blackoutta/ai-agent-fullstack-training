@@ -1,0 +1,21 @@
+# Fixture: issues-triggered agent that any user can invoke, with shell tools and the issue title in its prompt.
+name: f08-agent-wildcard
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_non_write_users: "*"
+          claude_args: '--allowedTools "Bash,Read,Write,Edit"'
+          prompt: |
+            Triage this issue. Title: ${{ github.event.issue.title }}

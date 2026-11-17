@@ -1,0 +1,3 @@
+[submodule "vendor/trailofbits"]
+	path = vendor/trailofbits
+	url = https://github.com/trailofbits/skills.git

@@ -1,0 +1,20 @@
+# Fixture: workflow_run consumer fetches the triggering run's artifact with the GitHub CLI into the workspace.
+name: f30-workflow-run-gh-run-download
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh run download "$RUN_ID" -n pr-meta
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GH_TOKEN: ${{ github.token }}
+      - run: gh pr comment "$(cat pr_number.txt)" --body-file comment.md
+        env:
+          GH_TOKEN: ${{ github.token }}

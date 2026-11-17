@@ -1,0 +1,44 @@
+# 离线决策脚本：任务三"技术债巡检"。这一类任务只存在于 config/tasks.yaml 的条目里，
+# src 下没有任何一处代码认识它——它就是"接第三类任务不改 TypeScript"的那条论据。
+steps:
+  - text: "先扫源码里的技术债标记：TODO、FIXME、Demo-only。"
+    tool_calls:
+      - name: search_code
+        args:
+          pattern: TODO|FIXME|Demo-only
+          glob: "**/*.ts"
+          literal: false
+
+  - text: "命中一条，读一下上下文，确认它是真债不是注释里的巧合。"
+    tool_calls:
+      - name: read_file
+        args:
+          path: src/utils/password.ts
+
+  - text: "把巡检结果写成报告。这一类任务的审批门口是关着的（approval.gate=none），所以这一步不等任何人。"
+    tool_calls:
+      - name: write_file
+        args:
+          path: docs/tech-debt-audit.md
+          content: |
+            # 技术债巡检报告
+
+            扫描范围：`**/*.ts`（跳过 node_modules、dist、.git）。
+            标记词：TODO、FIXME、Demo-only。
+
+            ## 命中
+
+            | 位置 | 原文 | 风险判断 |
+            | --- | --- | --- |
+            | `src/utils/password.ts:1` | `// Demo-only password check: the stored hash is "hash:" + plain text password.` | 口令"哈希"是明文拼接，`verifyPassword` 只做字符串相等比较。任何人都能从库里的 `hash:<明文>` 直接还原密码，**上线前必须换成真实的自适应哈希（bcrypt/argon2）**。 |
+
+            ## 没命中的部分
+
+            - 代码里没有 TODO 与 FIXME 标记。
+            - `src/utils/token.ts` 生成的令牌是 base64url 编码、没有签名，
+              这一条不带标记词所以没被扫到，但风险等级不低于上面那条，建议一并纳入巡检词表。
+  - text: "报告已经落盘了，拍一张 git 现状收尾。"
+    tool_calls:
+      - name: git_status
+
+  - text: "巡检完成，报告在 docs/tech-debt-audit.md：一条带标记的技术债命中，另有一条无标记但同等危险的令牌问题。"

@@ -1,0 +1,20 @@
+# Fixture: labeled pull_request_target copies the PR branch name into a step output and checks it out (single-quoted).
+name: f24-prt-step-output-head-ref
+on:
+  pull_request_target:
+    types: [labeled]
+permissions:
+  contents: write
+jobs:
+  preview:
+    if: github.event.label.name == 'preview'
+    runs-on: ubuntu-latest
+    steps:
+      - id: meta
+        uses: actions/github-script@v7
+        with:
+          script: core.setOutput('head_ref', context.payload.pull_request.head.ref)
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: '${{ steps.meta.outputs.head_ref }}'
+      - run: npm ci && npm run build
